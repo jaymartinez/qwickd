@@ -1,0 +1,719 @@
+//Find user record, see if user already exists
+    //__block BOOL lFailure = NO;
+    //__block BOOL lUserExists = NO;
+    /*
+     
+    PFQuery *lQuery = [PFQuery queryWithClassName:[user userTableName]];
+    [lQuery whereKey:[user emailColumn] equalTo:email];
+    
+    [lQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            NSLog(@"objects count: %d", [objects count]);
+            if ([objects count] > 0) {
+                NSLog(@"Success");
+                lUserExists = YES;
+            }
+        }
+        else {
+            lFailure = YES;
+            NSLog(@"Failure");
+        }
+    }];
+    
+    //NSLog(@"objectid: %@", objectid);
+    
+    if (lUserExists || lFailure)
+    {
+        UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:@"Registration Error"
+                                                         message:@"Email already in use"
+                                                        delegate:self
+                                               cancelButtonTitle:@"OK"
+                                               otherButtonTitles:nil, nil] autorelease];
+        
+        [alertView show];
+        return;
+    }
+    PFObject *userObject = [PFObject objectWithClassName:[user userTableName]];
+    userObject[[user fNameColumn]] = firstName;
+    userObject[[user lNameColumn]] = lastName;
+    userObject[[user emailColumn]] = email;
+        //TODO: Hash password
+    //int temp;
+    for (int i = 0; i < password1.length; i++)
+    {
+        
+    }
+    userObject[[user passwordColumn]] = password1;
+    
+    [userObject saveInBackground];
+    */
+    
+    
+    
+    /**UNLINK CODE**/
+    [PFFacebookUtils unlinkUserInBackground:currentUser block:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                NSLog(@"The user is no longer associated with their Facebook account");
+                //[alert show];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notice"
+                                                                 message:@"You are now logged out"
+                                                                delegate:self
+                                                       cancelButtonTitle:@"Ok"
+                                                       otherButtonTitles:nil, nil];
+                [alert show];
+                [alert release];
+            }
+        }];
+    /**END UNLINK CODE**/
+        
+        
+    /**QUERY USER DATA**/
+    if(currentUser) {
+            [query whereKey:@"username" equalTo:currentUser.username];
+            PFObject *userObject = [query getFirstObject];
+            NSString *firstName = userObject[@"FirstName"];
+            NSString *combinedMessage = [welcomeMessage stringByAppendingString:firstName];
+            [welcomeLabel setText:combinedMessage];
+        }
+        /**END QUERY DATA**/
+        
+
+/********* SESSION LOGOUT ATTEMPT *************/
+/*
+    else if ([PFUser currentUser]) {
+        [PFUser logOut];
+        [alert show];
+    }
+     */
+    //AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    //[appDelegate.fbSession closeAndClearTokenInformation];
+    //[PFUser logOut];
+    //[alert show];
+    
+    //If logged in via Facebook, kill the FB session
+    /*
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    
+    if (appDelegate.fbSession.isOpen) {
+        // if a user logs out explicitly, we delete any cached token information, and next
+        // time they run the applicaiton they will be presented with log in UX again; most
+        // users will simply close the app or switch away, without logging out; this will
+        // cause the implicit cached-token login to occur on next launch of the application
+        [appDelegate.fbSession closeAndClearTokenInformation];
+        [alert show];
+    }
+    else {
+        if (appDelegate.fbSession.state != FBSessionStateCreated) {
+            // Create a new, logged out session.
+            appDelegate.fbSession = [[FBSession alloc] init];
+        }
+        
+        // if the session isn't open, let's open it now and present the login UX to the user
+        [appDelegate.fbSession openWithCompletionHandler:^(FBSession *session,
+                                                           FBSessionState status,
+                                                           NSError *error) {
+            // and here we make sure to update our UX according to the new session state
+            //[self updateView];
+            
+            FBLoginViewController *fbvc = [[FBLoginViewController alloc] init];
+            [self.navigationController pushViewController:fbvc
+                                                 animated:NO];
+            [fbvc release];
+            
+        }];
+    }
+     */
+/********* END LOGOUT ATTEMPT ***************/
+        
+/******** RANDOM SHIT *********/
+/*
+    if (currentUser &&
+        [PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
+        [query whereKey:@"objectId" equalTo:@"a0hciDIGnY"];
+        PFObject *fbUser = [query getFirstObject];
+        NSString *username = fbUser[@"username"];
+        NSString *combinedMessage = [welcomeMessage stringByAppendingString:username];
+        [welcomeLabel setText:combinedMessage];
+    }
+    else {
+        if(currentUser) {
+            [query whereKey:@"username" equalTo:currentUser.username];
+            PFObject *userObject = [query getFirstObject];
+            NSString *firstName = userObject[@"FirstName"];
+            NSString *combinedMessage = [welcomeMessage stringByAppendingString:firstName];
+            [welcomeLabel setText:combinedMessage];
+        }
+    }
+     */
+    
+    //Boolean flag = [lUser getRegisterFlag];
+    /*
+    if (flag)
+    {
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@""
+                                                        message:@"Registration Complete!"
+                                                       delegate:self
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil, nil];
+        
+        [alert show];
+    }
+     */
+    // Do any additional setup after loading the view from its nib.
+    /*
+    if (![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
+        NSLog(@"logged in with facebook");
+        [PFFacebookUtils linkUser:[PFUser currentUser] permissions:nil block:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                NSLog(@"link successful");
+            }
+        }];
+    }
+     */
+     
+     
+/********** FACEBOOK LOGIN WITH BLOCK **************/
+/*
+        [PFFacebookUtils logInWithPermissions:permissions block:^(PFUser *user, NSError *error) {
+            NSString *message = @"You are now logged in through Facebook";
+            if (!user) {
+                NSString *errorString = [error userInfo][@"error"];
+                UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Error"
+                                                                 message:errorString
+                                                                delegate:self
+                                                       cancelButtonTitle:@"Dismiss"
+                                                       otherButtonTitles:nil, nil] autorelease];
+                [alert show];
+                return;
+            }
+            else if (user.isNew) {
+                UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Registration Successful"
+                                                                 message:message
+                                                                delegate:self
+                                                       cancelButtonTitle:@"Ok"
+                                                       otherButtonTitles:nil, nil] autorelease];
+                [lUser setLoggedInFacebook:true];
+                [lUser setLoggedInFlag:false];
+                [lpvc setLUser:lUser];
+                
+                [self.navigationController pushViewController:lpvc
+                                                     animated:NO];
+                [alert show];
+                
+            }
+            else {
+                UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Log In Successful"
+                                                                 message:message
+                                                                delegate:self
+                                                       cancelButtonTitle:@"Ok"
+                                                       otherButtonTitles:nil, nil] autorelease];
+                
+                [lUser setLoggedInFacebook:true];
+                [lUser setLoggedInFlag:false];
+                [lpvc setLUser:lUser];
+                [self.navigationController pushViewController:lpvc
+                                                     animated:NO];
+                [alert show];
+            }
+        }];
+         */
+        /*
+        NSLog(@"Session not open. Opening...");
+        appDelegate.fbSession = [[FBSession alloc] init];
+        if (appDelegate.fbSession.state != FBSessionStateCreated) {
+            // Create a new, logged out session.
+            appDelegate.fbSession = [[FBSession alloc] init];
+        }
+        //open session
+        [appDelegate.fbSession openWithCompletionHandler:^(FBSession *session,
+                                                           FBSessionState status,
+                                                           NSError *error) {
+            if (!error) {
+                NSLog(@"Session state status: %u", status);
+                [lUser setLoggedInFacebook:true];
+                [lpvc setLUser:lUser];
+                [self.navigationController pushViewController:lpvc
+                                                     animated:NO];
+            }
+            else {
+                NSLog(@"An error occurred opening the FB session");
+            }
+        }];
+         */
+/********** END FACEBOOK LOGIN WITH BLOCK *************/
+
+
+/*******FACEBOOK LOGIN VIEW *************/
+// Create Login View so that the app will be granted "status_update" permission.
+    /*
+    FBLoginView *loginview = [[FBLoginView alloc] init];
+    
+    loginview.frame = CGRectOffset(loginview.frame, 5, 200);
+#ifdef __IPHONE_7_0
+#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
+    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+        loginview.frame = CGRectOffset(loginview.frame, 5, 25);
+    }
+#endif
+#endif
+#endif
+    loginview.delegate = self;
+    
+    
+    [self.view addSubview:loginview];
+     
+    [loginview sizeToFit];
+     */
+    
+    /*
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    if (!appDelegate.fbSession.isOpen) {
+        appDelegate.fbSession = [[FBSession alloc] init];
+    }
+     */
+/******** END FACEBOOK LOGIN VIEW *******/
+
+/******** RECORD USER INFO TO CORE DATA **********/
+NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSManagedObject *userObject = [NSEntityDescription insertNewObjectForEntityForName:USER_ENTITY
+                                                                inManagedObjectContext:context];
+    [userObject setValue:[lCurrentUser username]
+                  forKey:@"username"];
+    [userObject setValue:[lCurrentUser objectId]
+                  forKey:@"userId"];
+    //Check if user is already in store (PRACTICE - no need to really do
+    //  this because user info is already cached in PFUser object
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *userEntity = [NSEntityDescription entityForName:USER_ENTITY
+                                                  inManagedObjectContext:context];
+    [fetchRequest setEntity:userEntity];
+    NSArray *lResults = [context executeFetchRequest:fetchRequest
+                                               error:&error];
+    if (![[lResults valueForKey:@"username"] containsObject:[lCurrentUser username]]){
+        NSLog(@"Does not have current user cached");
+    }
+    for (NSManagedObject *data in lResults) {
+        NSString *lUsername = [data valueForKey:@"username"];
+        NSString *lObjectId = [data valueForKey:@"userId"];
+        NSLog(@"Username: %@", lUsername);
+        NSLog(@"UserId: %@", lObjectId);
+        //if ([lUsername isEqualToString:[lCurrentUser username]])
+         //   break;
+    }
+/******** END RECORD USER CORE DATA ********/
+
+/******* OLD USER MODEL ************
+//
+//  User.h
+//  Qwickd
+//
+//  Created by Jay on 10/21/13.
+//  Copyright (c) 2013 Jay. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import <Parse/Parse.h>
+
+@interface User : NSObject
+{
+    BOOL registerFlag;
+    BOOL loggedIn;
+    BOOL loggedInFacebook;
+}
+
+
+- (void) setRegisterFlag:(BOOL)flag;
+- (BOOL) getRegisterFlag;
+- (void) setLoggedInFlag:(BOOL)flag;
+- (BOOL) getLoggedInFlag;
+- (void) setLoggedInFacebook:(BOOL)flag;
+- (BOOL) getLoggedInFacebook;
+
+@property (nonatomic, retain) NSString *firstName;
+@property (nonatomic, retain) NSString *lastName;
+@property (nonatomic, retain) NSString *email;
+@property (nonatomic, retain) NSString *password;
+@property (nonatomic, retain) NSString *objectId;
+@property (nonatomic, retain) PFUser *_currentUser;
+
+// Parse.com User Table Name
+@property (nonatomic, readonly) NSString *userTableName;
+
+// UserObject column names
+@property (nonatomic, readonly) NSString *fNameColumn;
+@property (nonatomic, readonly) NSString *lNameColumn;
+@property (nonatomic, readonly) NSString *objectIdColumn;
+@property (nonatomic, readonly) NSString *passwordColumn;
+@property (nonatomic, readonly) NSString *createdColumn;
+@property (nonatomic, readonly) NSString *updatedColumn;
+@property (nonatomic, readonly) NSString *emailColumn;
+
+
+@end
+
+//
+//  User.m
+//  Qwickd
+//
+//  Created by Jay on 10/21/13.
+//  Copyright (c) 2013 Jay. All rights reserved.
+//
+
+#import "User.h"
+
+@implementation User
+
+@synthesize firstName, lastName, email, password, objectId;
+@synthesize fNameColumn, lNameColumn, emailColumn, objectIdColumn, passwordColumn, createdColumn, updatedColumn, userTableName;
+@synthesize _currentUser;
+
+- (id) init
+{
+    self = [super init];
+    
+    if(self)
+    {
+        loggedInFacebook = NO;
+        registerFlag = NO;
+        loggedIn = NO;
+        
+        //Initialize UserObject class (Parse) column names and table name
+        /*
+        fNameColumn    = [[[NSString alloc] initWithString:@"FirstName"] autorelease];
+        lNameColumn    = [[[NSString alloc] initWithString:@"LastName"] autorelease];
+        objectIdColumn = [[[NSString alloc] initWithString:@"objectId"] autorelease];
+        emailColumn    = [[[NSString alloc] initWithString:@"Email"] autorelease];
+        createdColumn  = [[[NSString alloc] initWithString:@"createdAt"] autorelease];
+        updatedColumn  = [[[NSString alloc] initWithString:@"updatedAt"] autorelease];
+        userTableName  = [[[NSString alloc] initWithString:@"UserObject"] autorelease];
+        passwordColumn = [[[NSString alloc] initWithString:@"Password"] autorelease];
+         */
+        //objectId = [[[NSString alloc] init] autorelease];
+    }
+    
+    return self;
+}
+
+- (void)setLoggedInFacebook:(BOOL)flag
+{
+    loggedInFacebook = flag;
+}
+
+- (BOOL)getLoggedInFacebook
+{
+    return loggedInFacebook;
+}
+
+- (BOOL)getLoggedInFlag
+{
+    return loggedIn;
+}
+
+- (void)setLoggedInFlag:(BOOL)flag
+{
+    loggedIn = flag;
+}
+
+- (void)setRegisterFlag:(BOOL)flag
+{
+    registerFlag = flag;
+}
+
+- (BOOL)getRegisterFlag
+{
+    return registerFlag;
+}
+
+- (void) dealloc
+{
+    [super dealloc];
+    [_currentUser release];
+    [firstName release];
+    [lastName release];
+    [email release];
+    [password release];
+}
+
+
+@end
+
+/************ END OLD USER MODEL
+
+/*********LocationDidChange OLD**************/
+- (void)locationDidChange:(NSNotification *)note {
+    /** RECORD USER'S LOCATION **/
+    //update current location
+    //Do an initial save to the database and to local persistent store.
+    //NSDictionary *userInfo = [note userInfo];
+    //CLLocation *newLocation = [userInfo objectForKey:LOCATION_KEY];
+    
+    //Save the user's location to the backend
+    //PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLocation:newLocation];
+    /*
+     PFObject *object = [PFObject objectWithClassName:LOCATION_ENTITY];
+    [object setObject:geoPoint
+               forKey:COL_LOCATION];
+    [object setObject:[PFUser currentUser]
+               forKey:COL_USER];
+    [object saveEventually:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            [self updateLocation:geoPoint];
+        }
+    }];
+     */
+    //[self updateLocation:geoPoint];
+    
+}
+/**************end*********************/
+
+/**********CHECK FOR IPHONE/IPAD******/
+if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        self.viewController = [[[ViewController alloc] initWithNibName:@"ViewController_iPhone"
+                                                                bundle:nil] autorelease];
+    } else {
+        self.viewController = [[[ViewController alloc] initWithNibName:@"ViewController_iPad"
+                                                                bundle:nil] autorelease];
+    }
+/***********END*********************/
+
+/***********RANDOM******************/
+//place type descriptions
+        //NSArray *lTypes = [place objectForKey:@"types"];
+        
+        //place address
+        //NSString *lAddress = [place objectForKey:@"formatted_address"];
+        
+        //icon url
+        //NSString *lIcon = [place objectForKey:@"icon"];
+        
+        //[[qwPlaces placesDictionary] addEntriesFromDictionary:place];
+        
+        //Add the place dictionary to the array
+        //[[qwPlaces placesDictionaryArray] addObject:place];
+        
+        
+        
+
+// This method will be called several times as the data arrives
+/*
+- (void)connection:(NSURLConnection *)conn didReceiveData:(NSData *)data
+{
+    // Add the incoming chunk of data to the container we are keeping
+    // The data always comes in the correct order
+    [placesData appendData:data];
+}
+ */
+
+/*
+- (void)connectionDidFinishLoading:(NSURLConnection *)conn
+{
+    NSError* error;
+    
+    // Create the parser object with the data received from the web service
+    //SBJsonParser *parser = [[[SBJsonParser alloc] init] autorelease];
+    //NSXMLParser *parser = [[NSXMLParser alloc] initWithData:placesData];
+    //NSString *dataString = [[[NSString alloc] initWithData:placesData
+      //                                           encoding:NSUTF8StringEncoding]autorelease];
+    //NSLog(@"Data: %@", dataString);
+    //NSDictionary *responseResult = [parser objectWithData:placesData];
+    NSDictionary *responseResult = [NSJSONSerialization JSONObjectWithData:placesData
+                                                                   options:kNilOptions
+                                                                     error:&error] ;
+    
+    NSArray *results = [responseResult objectForKey:@"results"];
+    nextPageToken = [responseResult objectForKey:@"next_page_token"];
+    NSMutableArray *lPlaceNames = [[[NSMutableArray alloc] init] autorelease];
+    
+    for (int i = 0; i < results.count; i++) {
+        NSDictionary *place = [results objectAtIndex:i];
+        [placesDictionary addEntriesFromDictionary:place];
+        NSString *name = [place objectForKey:@"name"];
+        [lPlaceNames addObject:name];
+        NSLog(@"name: %@", name);
+    }
+    
+    self.placeNames = lPlaceNames;
+    //[parser setDelegate:self];
+    //[parser parse];
+    //NSMutableData *lData = placesData;
+    
+    //NSDictionary *lResult = [parser objectWithData:placesData];
+    
+    // The parser is done (it blocks until done), you can release it immediately
+    //[parser release];
+    
+    // Get rid of the data container as we no longer need it
+    [placesData release];
+    placesData = nil;
+    
+    // Get rid of the connection, no longer need it
+    [connection release];
+    connection = nil;
+    
+    //activePlacesList = [[lResult objectForKey:@"results"] objectForKey:@"name"];
+    
+    //if there is a next page token, get more results
+    //if (nextPageToken != nil && nextPageToken != NULL) {
+     //   [self fetchPlaces:[self _context]];
+    //}
+    
+}
+ ***********************END*****************/
+ 
+ 
+ /*******TWITTER / FACEBOOK LOGIN CALLBACKS ************/
+- (void) twLogin_callback:(id)sender
+{
+    LandingPageViewController *lpvc = [[[LandingPageViewController alloc] init] retain];
+    NSLog(@"Twitter callback listening");
+    [PFTwitterUtils linkUser:[PFUser currentUser] block:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            NSLog(@"Twitter link successful");
+            [self.navigationController pushViewController:lpvc
+                                                 animated:NO];
+        }
+    }];
+    
+    [lpvc release];
+}
+
+- (void)fbLogin_callback:(id)sender
+{
+    LandingPageViewController *lpvc = [[[LandingPageViewController alloc] init] retain];
+    NSLog(@"Login callback listening");
+    //if (![PFFacebookUtils isLinkedWithUser:[PFUser currentUser]]) {
+        NSLog(@"logged in with facebook");
+        [PFFacebookUtils linkUser:[PFUser currentUser] permissions:nil block:^(BOOL succeeded, NSError *error) {
+            if (succeeded) {
+                NSLog(@"link successful");
+                [lUser setLoggedInFacebook:YES];
+                [lpvc setLUser:lUser];
+                [self.navigationController pushViewController:lpvc
+                                                     animated:NO];
+            }
+        }];
+   // }
+}
+******************END*********************************/
+
+/************Activity Indicator ********************/
+//Start the activity indicator
+    ActivityView *lActivityView = [[[ActivityView alloc] initWithFrame:CGRectMake(0.f, 0.f, self.view.frame.size.width, self.view.frame.size.height)] autorelease];
+    //UILabel *label = lActivityView.label;
+    //label.text = @"Please wait...";
+    //label.font = [UIFont boldSystemFontOfSize:20.f];
+    [lActivityView.activityIndicator startAnimating];
+    [lActivityView layoutSubviews];
+    [self.view addSubview:lActivityView];
+/****************END*******************************/
+
+/*
+    NSArray *placeData = [coreDataHelper fetchData:PLACES_ENTITY];
+    if (placeData != nil && placeData.count > 0) {
+        PlacesData *lRecentPlace = [placeData objectAtIndex:[placeData count] - 1];
+        NSDate *recordedAt = [lRecentPlace recordedAt];
+        NSTimeInterval elapsed = [recordedAt timeIntervalSinceDate:[NSDate date]];
+        NSLog(@"Elapsed: %f", elapsed);
+        //if date recorded is older than fifteen minutes
+        if (elapsed < -60) {
+            //Do our main places web service call
+            //placesInformation = [locationHelper fetchPlaces];
+            placesInformation = [placesHelper fetchPlaces];
+            
+            //save place information to core data
+            [self savePlaces];
+        }
+        
+    }
+    else {
+        //Do our main places web service call
+        //placesInformation = [locationHelper fetchPlaces];
+        placesInformation = [placesHelper fetchPlaces];
+        
+        //save place information to core data
+        [self savePlaces];
+    }
+    
+    [self loadPlaceNamesArrayFromStorage];
+    */
+    
+    //dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    /*
+        NSMutableArray *lPlacesData = [locationHelper fetchPlaces];
+        [self performSelectorOnMainThread:@selector(goFetchPlaces:)
+                               withObject:lPlacesData
+                            waitUntilDone:YES];
+     */
+    
+
+    //});
+
+    // Uncomment the following line to preserve selection between presentations.
+    // self.clearsSelectionOnViewWillAppear = NO;
+ 
+    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    
+    
+/***********QUERYING LOCATION******************/
+        PFQuery *query = [PFQuery queryWithClassName:LOCATION_ENTITY];
+        [query whereKey:@"user" equalTo:currentUser];
+        //[query whereKey:@"createdAt" notEqualTo:lRow.recordedAt];
+        query.limit = 10;
+        [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                //find successful
+                if (objects != nil && objects.count > 0) {
+                    NSArray *lLocations = [self.coreDataHelper fetchData:LOCATION_ENTITY];
+                    LocationData *lRow = [lLocations objectAtIndex:[lLocations count]-1];
+                    double lCurrentLat = lRow.latitude.doubleValue;
+                    double lCurrentLong = lRow.longitude.doubleValue;
+                    for (PFObject *lObject in objects) {
+                        PFGeoPoint *lGeoPoint = [lObject objectForKey:@"location"];
+                        NSLog(@"%f, %f", lGeoPoint.latitude, lGeoPoint.longitude);
+                        if (lGeoPoint != nil && lGeoPoint.longitude != 0 && lGeoPoint.latitude != 0) {
+                            double lat = [[NSNumber numberWithDouble:[lGeoPoint latitude]]doubleValue];
+                            double longitude = [[NSNumber numberWithDouble:[lGeoPoint longitude]]doubleValue];
+                            //NSDate *date = (NSDate *)[lObject objectForKey:@"createdAt"];
+                            if (lCurrentLat == lat && lCurrentLong == longitude) {// && date == lRow.recordedAt) {
+                                continue;
+                            }
+                            [self saveLocationToDatabase:nil];
+                        }
+                    }
+                    
+                }
+                else {
+                    [self saveLocationToDatabase:nil];
+                }
+                    
+            } else {
+                [self saveLocationToDatabase:nil];
+            }
+        }];
+         ********************END********************/
+         
+       /*****************************/
+/****** This was being used to see if the cached data was older than 15 minutes. If it was then *********/
+     we were making a new webservice call to pull recent place data. For now let's just make 
+     a new call whenever the refresh button is pressed
+    NSArray *placeData = [coreDataHelper fetchData:PLACES_ENTITY];
+    if (placeData != nil && placeData.count > 0) {
+        PlacesData *lRecentPlace = [placeData objectAtIndex:[placeData count] - 1];
+        NSDate *recordedAt = [lRecentPlace recordedAt];
+        NSTimeInterval elapsed = [recordedAt timeIntervalSinceDate:[NSDate date]];
+        NSLog(@"Elapsed: %f", elapsed);
+        if (elapsed < -600) {
+            [self updatePlaces];
+        }
+        else {
+            [activityView.activityIndicator stopAnimating];
+            [activityView removeFromSuperview];
+        }
+    }
+    else {
+        [self updatePlaces];
+    }
+     ********************END********************/
